@@ -1,0 +1,52 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of tests to run'
+        required: true
+        default: 'unit'
+        type: choice
+        options:
+          - unit
+          - ui
+          - all
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Run Unit Tests
+        if: inputs.test_type == 'unit'
+        run: make test-unit
+
+      - name: Run UI Tests
+        if: inputs.test_type == 'ui'
+        run: make test-ui
+
+      - name: Run All Tests
+        if: inputs.test_type == 'all'
+        run: make test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: fastlane/test_output/
+          retention-days: 7 

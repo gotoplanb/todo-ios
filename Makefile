@@ -1,12 +1,20 @@
-.PHONY: install test build build-and-test clean test-results
+.PHONY: install test test-unit test-ui build build-and-test clean test-results
 
 # Install dependencies
 install:
 	bundle install
 
-# Run tests
+# Run all tests
 test:
 	bundle exec fastlane test
+
+# Run only unit tests
+test-unit:
+	bundle exec fastlane test_unit
+
+# Run only UI tests
+test-ui:
+	bundle exec fastlane test_ui
 
 # Build the app
 build:
@@ -38,11 +46,13 @@ test-results:
 # Show help
 help:
 	@echo "Available commands:"
-	@echo "  make install      - Install dependencies"
-	@echo "  make test        - Run tests"
-	@echo "  make build       - Build the app"
-	@echo "  make build-and-test - Build and test"
-	@echo "  make clean       - Clean build artifacts"
-	@echo "  make update      - Update dependencies"
-	@echo "  make test-results - Serve HTML test results"
-	@echo "  make help        - Show this help message" 
+	@echo "  make install      - Install project dependencies (Bundler, Fastlane)"
+	@echo "  make test        - Run all tests using Fastlane"
+	@echo "  make test-unit   - Run only unit tests"
+	@echo "  make test-ui     - Run only UI tests"
+	@echo "  make build       - Build the app using Fastlane"
+	@echo "  make build-and-test - Build the app and run tests"
+	@echo "  make clean       - Clean build artifacts and derived data"
+	@echo "  make update      - Update project dependencies"
+	@echo "  make test-results - Serve HTML test results (requires Python 3)"
+	@echo "  make help        - Show all available commands" 

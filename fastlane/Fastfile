@@ -11,7 +11,7 @@ platform :ios do
     )
   end
 
-  desc "Run tests"
+  desc "Run all tests"
   lane :test do
     run_tests(
       scheme: "todo",
@@ -31,6 +31,54 @@ platform :ios do
       skip_package_dependencies_resolution: true,
       result_bundle: true,
       xcargs: "XCRESULT_LEGACY_TOOL=1"
+    )
+  end
+
+  desc "Run only unit tests"
+  lane :test_unit do
+    run_tests(
+      scheme: "todo",
+      devices: ["iPhone 16 Pro"],
+      clean: true,
+      reset_simulator: true,
+      prelaunch_simulator: true,
+      reinstall_app: true,
+      number_of_retries: 3,
+      output_directory: "./fastlane/test_output",
+      output_types: "html,junit",
+      skip_build: false,
+      fail_build: true,
+      xcodebuild_formatter: "xcpretty",
+      buildlog_path: "./fastlane/test_output/logs",
+      skip_slack: true,
+      skip_package_dependencies_resolution: true,
+      result_bundle: true,
+      xcargs: "XCRESULT_LEGACY_TOOL=1",
+      test_targets: ["todoTests"]
+    )
+  end
+
+  desc "Run only UI tests"
+  lane :test_ui do
+    run_tests(
+      scheme: "todo",
+      devices: ["iPhone 16 Pro"],
+      clean: true,
+      reset_simulator: true,
+      prelaunch_simulator: true,
+      reinstall_app: true,
+      number_of_retries: 3,
+      output_directory: "./fastlane/test_output",
+      output_types: "html,junit",
+      skip_build: false,
+      fail_build: true,
+      xcodebuild_formatter: "xcpretty",
+      buildlog_path: "./fastlane/test_output/logs",
+      skip_slack: true,
+      skip_package_dependencies_resolution: true,
+      result_bundle: true,
+      xcargs: "XCRESULT_LEGACY_TOOL=1",
+      test_targets: ["todoUITests"]
     )
   end
 
