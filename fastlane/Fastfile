@@ -21,8 +21,11 @@ platform :ios do
       prelaunch_simulator: true,
       reinstall_app: true,
       number_of_retries: 3,
-      result_bundle: true,
-      xcargs: "XCRESULT_LEGACY_TOOL=1"
+      output_directory: "./fastlane/test_output",
+      output_types: "html,junit",
+      skip_build: false,
+      fail_build: true,
+      xcodebuild_formatter: "xcpretty"
     )
   end
 
