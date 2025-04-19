@@ -25,7 +25,12 @@ platform :ios do
       output_types: "html,junit",
       skip_build: false,
       fail_build: true,
-      xcodebuild_formatter: "xcpretty"
+      xcodebuild_formatter: "xcpretty",
+      buildlog_path: "./fastlane/test_output/logs",
+      skip_slack: true,
+      skip_package_dependencies_resolution: true,
+      result_bundle: true,
+      xcargs: "XCRESULT_LEGACY_TOOL=1"
     )
   end
 
