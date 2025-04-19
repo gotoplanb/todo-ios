@@ -19,12 +19,28 @@ A minimal, production-ready starter template for iOS applications. This template
 
 ## Development Commands
 
+The following commands are available through the Makefile:
+
 ```bash
-make install      # Install dependencies
-make test        # Run tests
-make build       # Build the app
-make clean       # Clean build artifacts
+make install      # Install project dependencies (Bundler, Fastlane)
+make test        # Run all tests using Fastlane
+make build       # Build the app using Fastlane
+make build-and-test  # Build the app and run tests
+make clean       # Clean build artifacts and derived data
+make update      # Update project dependencies
+make test-results # Serve HTML test results (requires Python 3)
+make help        # Show all available commands
 ```
+
+### Test Results
+
+After running tests, you can view the HTML test results by running:
+
+```bash
+make test-results
+```
+
+This will start a local server at http://localhost:8000. Open http://localhost:8000/report.html in your browser to view the test results.
 
 ## License
 
