@@ -54,7 +54,7 @@ platform :ios do
       skip_package_dependencies_resolution: true,
       result_bundle: true,
       xcargs: "XCRESULT_LEGACY_TOOL=1",
-      test_targets: ["todoTests"]
+      only_testing: ["todoTests"]
     )
   end
 
@@ -78,7 +78,7 @@ platform :ios do
       skip_package_dependencies_resolution: true,
       result_bundle: true,
       xcargs: "XCRESULT_LEGACY_TOOL=1",
-      test_targets: ["todoUITests"]
+      only_testing: ["todoUITests"]
     )
   end
 
