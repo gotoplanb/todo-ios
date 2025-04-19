@@ -1,0 +1,34 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build the app"
+  lane :build do
+    build_ios_app(
+      scheme: "todo",
+      clean: true,
+      export_method: "development",
+      configuration: "Debug"
+    )
+  end
+
+  desc "Run tests"
+  lane :test do
+    run_tests(
+      scheme: "todo",
+      devices: ["iPhone 16 Pro"],
+      clean: true,
+      reset_simulator: true,
+      prelaunch_simulator: true,
+      reinstall_app: true,
+      number_of_retries: 3,
+      result_bundle: true,
+      xcargs: "XCRESULT_LEGACY_TOOL=1"
+    )
+  end
+
+  desc "Build and test"
+  lane :build_and_test do
+    build
+    test
+  end
+end 

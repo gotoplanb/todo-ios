@@ -11,15 +11,26 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    @State private var newItemTitle = ""
 
     var body: some View {
         NavigationSplitView {
             List {
                 ForEach(items) { item in
                     NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        ItemDetailView(item: item)
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        HStack {
+                            Image(systemName: item.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(item.isCompleted ? .green : .gray)
+                                .onTapGesture {
+                                    withAnimation {
+                                        item.isCompleted.toggle()
+                                    }
+                                }
+                            Text(item.title)
+                                .strikethrough(item.isCompleted)
+                        }
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -28,21 +39,34 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
             }
+            .navigationTitle("Todo List")
         } detail: {
-            Text("Select an item")
+            Text("Select a todo item")
+        }
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                TextField("New todo", text: $newItemTitle)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                
+                Button(action: addItem) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title2)
+                }
+                .disabled(newItemTitle.isEmpty)
+                .padding(.trailing)
+            }
+            .padding(.vertical, 8)
+            .background(.bar)
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = Item(title: newItemTitle)
             modelContext.insert(newItem)
+            newItemTitle = ""
         }
     }
 
@@ -52,6 +76,19 @@ struct ContentView: View {
                 modelContext.delete(items[index])
             }
         }
+    }
+}
+
+struct ItemDetailView: View {
+    @Bindable var item: Item
+    @Environment(\.modelContext) private var modelContext
+    
+    var body: some View {
+        Form {
+            TextField("Title", text: $item.title)
+            Toggle("Completed", isOn: $item.isCompleted)
+        }
+        .navigationTitle("Edit Todo")
     }
 }
 

@@ -14,12 +14,23 @@ struct todoApp: App {
         let schema = Schema([
             Item.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        
+        // Configure for persistent storage
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            allowsSave: true
+        )
+        
         do {
+            // Try to create the container with the new configuration
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            print("Failed to create persistent store: \(error)")
+            
+            // If persistent storage fails, fall back to in-memory storage
+            let inMemoryConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            return try! ModelContainer(for: schema, configurations: [inMemoryConfig])
         }
     }()
 
