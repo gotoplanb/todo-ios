@@ -16,56 +16,57 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            ScrollView {
-                List {
-                    ForEach(items) { item in
-                        NavigationLink {
-                            ItemDetailView(item: item)
-                        } label: {
-                            HStack {
-                                Image(systemName: item.isCompleted ? "checkmark.circle.fill" : "circle")
-                                    .foregroundColor(item.isCompleted ? .green : .gray)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            item.isCompleted.toggle()
-                                        }
-                                    }
-                                Text(item.title)
-                                    .strikethrough(item.isCompleted)
+            List {
+                ForEach(items) { item in
+                    HStack {
+                        Button(action: {
+                            withAnimation {
+                                item.isCompleted.toggle()
+                                try? modelContext.save()
                             }
+                        }) {
+                            Image(systemName: item.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(item.isCompleted ? .green : .gray)
+                                .accessibilityIdentifier(item.isCompleted ? "checkmark.circle.fill" : "circle")
                         }
+                        .accessibilityIdentifier(item.isCompleted ? "checkmark.circle.fill" : "circle")
+                        
+                        NavigationLink(item.title) {
+                            ItemDetailView(item: item)
+                        }
+                        .strikethrough(item.isCompleted)
+                        .accessibilityIdentifier("todo-item-\(item.title)")
                     }
-                    .onDelete(perform: deleteItems)
                 }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
-                }
-                .navigationTitle("Todo List")
+                .onDelete(perform: deleteItems)
             }
-            .onTapGesture {
-                isTextFieldFocused = false
+            .listStyle(PlainListStyle())
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                        .accessibilityIdentifier("edit-button")
+                }
+            }
+            .navigationTitle("Todo List")
+            .safeAreaInset(edge: .bottom) {
+                HStack {
+                    TextField("New Todo", text: $newItemTitle)
+                        .textFieldStyle(.roundedBorder)
+                        .accessibilityIdentifier("new-todo-input")
+                    
+                    Button(action: addItem) {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(.blue)
+                    }
+                    .accessibilityIdentifier("add-todo-button")
+                    .disabled(newItemTitle.isEmpty)
+                    .padding(.trailing)
+                }
+                .padding(.vertical, 8)
+                .background(.bar)
             }
         } detail: {
             Text("Select a todo item")
-        }
-        .safeAreaInset(edge: .bottom) {
-            HStack {
-                TextField("New todo", text: $newItemTitle)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                    .focused($isTextFieldFocused)
-                
-                Button(action: addItem) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title2)
-                }
-                .disabled(newItemTitle.isEmpty)
-                .padding(.trailing)
-            }
-            .padding(.vertical, 8)
-            .background(.bar)
         }
     }
 
@@ -73,6 +74,7 @@ struct ContentView: View {
         withAnimation {
             let newItem = Item(title: newItemTitle)
             modelContext.insert(newItem)
+            try? modelContext.save()
             newItemTitle = ""
             isTextFieldFocused = false
         }
@@ -83,6 +85,7 @@ struct ContentView: View {
             for index in offsets {
                 modelContext.delete(items[index])
             }
+            try? modelContext.save()
         }
     }
 }
@@ -94,7 +97,13 @@ struct ItemDetailView: View {
     var body: some View {
         Form {
             TextField("Title", text: $item.title)
+                .onChange(of: item.title) { _, _ in
+                    try? modelContext.save()
+                }
             Toggle("Completed", isOn: $item.isCompleted)
+                .onChange(of: item.isCompleted) { _, _ in
+                    try? modelContext.save()
+                }
         }
         .navigationTitle("Edit Todo")
     }

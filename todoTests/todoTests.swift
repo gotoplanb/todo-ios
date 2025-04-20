@@ -5,13 +5,28 @@
 //  Created by Dave Stanton on 4/19/25.
 //
 
-import Testing
+import XCTest
 @testable import todo
 
-struct todoTests {
-
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+final class todoTests: XCTestCase {
+    
+    func testItemCreation() {
+        // Simple test for Item creation
+        let item = Item(title: "Test Task")
+        
+        // Verify properties
+        XCTAssertEqual(item.title, "Test Task")
+        XCTAssertFalse(item.isCompleted)
+        XCTAssertNotNil(item.timestamp)
     }
-
+    
+    func testItemCompletionToggle() {
+        // Create an item and toggle completion
+        let item = Item(title: "Test Task")
+        XCTAssertFalse(item.isCompleted)
+        
+        // Toggle completion
+        item.isCompleted = true
+        XCTAssertTrue(item.isCompleted)
+    }
 }

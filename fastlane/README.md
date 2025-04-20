@@ -29,7 +29,23 @@ Build the app
 [bundle exec] fastlane ios test
 ```
 
-Run tests
+Run all tests
+
+### ios test_unit
+
+```sh
+[bundle exec] fastlane ios test_unit
+```
+
+Run only unit tests
+
+### ios test_ui
+
+```sh
+[bundle exec] fastlane ios test_ui
+```
+
+Run only UI tests
 
 ### ios build_and_test
 

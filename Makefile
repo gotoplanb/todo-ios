@@ -1,4 +1,4 @@
-.PHONY: install test test-unit test-ui build build-and-test clean test-results
+.PHONY: install test test-unit test-ui build build-and-test clean test-results test-direct
 
 # Install dependencies
 install:
@@ -43,6 +43,10 @@ test-results:
 	@echo "Serving test results at http://localhost:8000/report.html"
 	@cd fastlane/test_output && python3 -m http.server 8000
 
+# Run tests directly with xcodebuild
+test-direct:
+	xcodebuild test -project todo.xcodeproj -scheme todo -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:todoTests
+
 # Show help
 help:
 	@echo "Available commands:"
@@ -50,6 +54,7 @@ help:
 	@echo "  make test        - Run all tests using Fastlane"
 	@echo "  make test-unit   - Run only unit tests"
 	@echo "  make test-ui     - Run only UI tests"
+	@echo "  make test-direct - Run unit tests directly with xcodebuild"
 	@echo "  make build       - Build the app using Fastlane"
 	@echo "  make build-and-test - Build the app and run tests"
 	@echo "  make clean       - Clean build artifacts and derived data"

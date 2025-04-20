@@ -30,7 +30,11 @@ platform :ios do
       skip_slack: true,
       skip_package_dependencies_resolution: true,
       result_bundle: true,
-      xcargs: "XCRESULT_LEGACY_TOOL=1"
+      xcargs: "XCRESULT_LEGACY_TOOL=1",
+      app_identifier: "gotoplanb.xyz.todo",
+      disable_concurrent_testing: true,
+      disable_slide_to_type: true,
+      force_quit_simulator: true
     )
   end
 
@@ -54,6 +58,7 @@ platform :ios do
       skip_package_dependencies_resolution: true,
       result_bundle: true,
       xcargs: "XCRESULT_LEGACY_TOOL=1",
+      app_identifier: "gotoplanb.xyz.todo",
       only_testing: ["todoTests"]
     )
   end
@@ -78,6 +83,7 @@ platform :ios do
       skip_package_dependencies_resolution: true,
       result_bundle: true,
       xcargs: "XCRESULT_LEGACY_TOOL=1",
+      app_identifier: "gotoplanb.xyz.todo",
       only_testing: ["todoUITests"]
     )
   end
